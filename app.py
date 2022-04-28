@@ -2,13 +2,16 @@ from msilib.schema import ListBox
 from re import M
 import tkinter as tk
 from tkinter import *
-from tkinter import simpledialog
-
+from tkinter import simpledialog,messagebox
+import pywhatkit
 from click import password_option
 import db as DB
 # Setup window
-window = tk.Tk()
+from random_password import Generator_GUI
 
+window = tk.Tk()
+global is_on
+is_on = True
 
     
 
@@ -69,12 +72,22 @@ def main_screen():
     clear_frame()
     window.geometry("800x350")
     details = DB.get_configuration_dataBase()
+    global is_on
 #Create Buttons
-    generate_password = tk.Button(window, text="Generate Password",font=("Helvetica", 10),command=lambda:generate_random_password())
+    generate_password = tk.Button(window, text="Generate Password",font=("Helvetica", 10),command=Generator_GUI)
     generate_password.place(x=30,y=30)
 
     add_new_password_button = tk.Button(window, text="Add New Password",font=("Helvetica", 10), command=lambda:add_new_password())
     add_new_password_button.place(x=170,y=30)
+
+    delete_password_button = tk.Button(window, text="Delete Password", font=("Helvetica", 10), command=lambda: delete_password())
+    delete_password_button.place(x=440,y=80)
+
+    open_website_button = tk.Button(window,text="Open Website",font=("Helvetica", 10),command=lambda: open_website())
+    open_website_button.place(x=560,y=80)
+
+    show_password_button = tk.Button(window,text="Show Password",font=("Helvetica", 10),command=lambda:show_password_toggle())
+    show_password_button.place(x=670,y=80)
 #Create Titles
     title_website = tk.Label(window,text="Website",font=("Helvetica", 9))
     title_website.place(x=80,y=120)
@@ -84,8 +97,17 @@ def main_screen():
 
     title_password = tk.Label(window,text="Password",font=("Helvetica", 9))
     title_password.place(x=380,y=120)
+def add_new_password():
+    # website = popup("website")
+    website = popup("Website")
+    email = popup("email/username")
+    password = popup("password")
+    DB.insert_details(website,email,password)
+    task_list()
+
 def task_list():
     global list1
+    global is_on
     records = DB.get_configuration_dataBase()
     show = ""
 
@@ -97,24 +119,56 @@ def task_list():
     list1.place(x=20, y=155)
     scrollbar.config(command=list1.yview)
     id1 = 0
-    for website, email, password in records:
+    for website, email, password, hash_password in records:
         id1 += 1
-        show = str(id1) + "   " + website + "   " + email + "  " + password + "\n"
+        print("is on : " + str(is_on))
+        if is_on:
+            show = str(id1) + "   " + website + "   " + email + "  " + hash_password + "\n"
+            print("hash : " + hash_password)
+        else:
+            show = str(id1) + "   " + website + "   " + email + "  " + password + "\n"
+            print("not hash : " + password)
+
+
+        print("Webstie " + str(len(website))) #15
+        print("email/username " + str(len(email))) #22
+        print("password " + str(len(password)))#15
         list1.insert(END, show)
-
-def generate_random_password():
-    pass
-def add_new_password():
-    # website = popup("website")
-    website = popup("Website")
-    email = popup("email/username")
-    password = popup("password")
-    DB.insert_details(website,email,password)
-    task_list()
-
 def popup(name):
     answer = simpledialog.askstring("Enter info", name)
     return answer
+
+def delete_password():
+    try:
+        val = int(list1.curselection()[0])
+        data_list = (list1.get(val)).split("   ")
+        print("Id number : " + data_list[0])
+        # print("app.py : " + data_list[1])
+        # print(len(data_list[1]))
+        DB.delete_details(str(data_list[1]))
+        DB.print_dataBase()
+        task_list()
+    except:
+        # messagebox.showerror('Select Task', 'Please select task from task List')
+        pass
+def open_website():
+    val = int(list1.curselection()[0])
+    data_list = (list1.get(val)).split("   ")
+    # print("app.py : " + data_list[1])
+    # print(len(data_list[1]))
+    website = data_list[1]
+    print(website)
+    pywhatkit.search(website)
+def show_password_toggle():
+    global is_on
+    if is_on:
+        is_on = False
+        task_list()
+    else:
+        is_on = True
+        task_list()
+
+
 
 
 # Run the program
