@@ -1,10 +1,9 @@
-from msilib.schema import ListBox
-from re import M
+# from msilib.schema import ListBox
+# from re import M
 import tkinter as tk
 from tkinter import *
 from tkinter import simpledialog,messagebox
-import pywhatkit
-from click import password_option
+# import pywhatkit
 import db as DB
 # Setup window
 from random_password import Generator_GUI

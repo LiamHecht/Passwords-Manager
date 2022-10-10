@@ -1,6 +1,4 @@
 # import sqlalchemy
-from traceback import print_tb
-from sqlalchemy import null
 from werkzeug.security import check_password_hash, generate_password_hash
 import sqlite3
 
