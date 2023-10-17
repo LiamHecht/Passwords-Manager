@@ -102,7 +102,7 @@ class Generator_GUI(Generator):
         self.window.title("Password Generator")
         self.window.update()
 
-        logo = PhotoImage(file="mystery-box.png")
+        logo = PhotoImage(file="assets/mystery-box.png")
         self.window.iconphoto(True, logo)
         self.window.geometry("500x250")
         self.window.resizable(False, False)

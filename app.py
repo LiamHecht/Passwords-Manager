@@ -6,7 +6,9 @@ from tkinter import simpledialog,messagebox
 # import pywhatkit
 import db as DB
 # Setup window
-from random_password import Generator_GUI
+# from random_password import Generator_GUI
+import random_password
+import strong_check
 
 window = tk.Tk()
 global is_on
@@ -73,11 +75,14 @@ def main_screen():
     details = DB.get_configuration_dataBase()
     global is_on
 #Create Buttons
-    generate_password = tk.Button(window, text="Generate Password",font=("Helvetica", 10),command=Generator_GUI)
-    generate_password.place(x=30,y=30)
+    password_strength = tk.Button(window, text="Strength Check",font=("Helvetica", 8),command=strong_check.PasswordStrengthChecker)
+    password_strength.place(x=30,y=30)
 
-    add_new_password_button = tk.Button(window, text="Add New Password",font=("Helvetica", 10), command=lambda:add_new_password())
-    add_new_password_button.place(x=170,y=30)
+    generate_password = tk.Button(window, text="Generate Password",font=("Helvetica", 8),command=random_password.Generator_GUI)
+    generate_password.place(x=130,y=30)
+
+    add_new_password_button = tk.Button(window, text="Add New Password",font=("Helvetica", 8), command=lambda:add_new_password())
+    add_new_password_button.place(x=250,y=30)
 
     delete_password_button = tk.Button(window, text="Delete Password", font=("Helvetica", 10), command=lambda: delete_password())
     delete_password_button.place(x=440,y=80)
